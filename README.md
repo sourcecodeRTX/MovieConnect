@@ -1,4 +1,4 @@
-<![CDATA[<div align="center">
+<div align="center">
 
 # 🎬 MovieConnect
 
@@ -769,4 +769,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=12,9,5&height=100&section=footer" width="100%">
 
 </div>
-]]>
