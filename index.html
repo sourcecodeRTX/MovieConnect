@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="MovieConnect - Discover trending movies, watch trailers, and build your personal watchlist. Powered by TMDb.">
+    <meta name="keywords" content="movies, films, cinema, trailers, watchlist, TMDb">
+    <meta name="author" content="Ratty Ram">
+    <meta name="theme-color" content="#0a0a0f">
+
+    <title>MovieConnect | Discover Your Next Favorite Film</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="responsive-fixes.css">
+    <link rel="stylesheet" href="desktop-fix.css">
+</head>
+
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="#" class="navbar-brand" onclick="goHome()">
+                <i class="fas fa-film"></i>
+                <span>MovieConnect</span>
+            </a>
+
+            <button class="navbar-toggle" id="navbarToggle" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <ul class="navbar-nav" id="navbarNav">
+                <li>
+                    <a href="#" class="nav-link active" id="homeLink" onclick="goHome()">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link" id="trendingLink" onclick="showTrendingPage()">
+                        <i class="fas fa-fire"></i>
+                        <span>Trending</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link" id="watchlistLink" onclick="showWatchlist()">
+                        <i class="fas fa-bookmark"></i>
+                        <span>Watchlist</span>
+                        <span class="badge" id="watchlistCount">0</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header class="hero" id="heroSection">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-sparkles"></i>
+                <span>Discover • Watch • Enjoy</span>
+            </div>
+
+            <h1 class="display-hero hero-title">
+                Find Your Next <span class="text-gradient">Favorite</span> Film
+            </h1>
+
+            <p class="hero-subtitle">
+                Explore thousands of movies, watch trailers, read reviews, and build your personal watchlist.
+            </p>
+
+            <!-- Search Container -->
+            <div class="search-container">
+                <div class="search-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" id="searchInput" placeholder="Search for movies..."
+                        autocomplete="off" aria-label="Search movies">
+                    <button class="search-btn" onclick="searchMovies(1)" aria-label="Search">
+                        <span>Search</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Search Autocomplete Dropdown -->
+                <div class="search-autocomplete" id="searchAutocomplete"></div>
+            </div>
+
+            <!-- Quick Action Buttons -->
+            <div class="quick-actions">
+                <button class="quick-action-btn" onclick="quickSearch('Marvel')">
+                    <i class="fas fa-mask"></i> Marvel
+                </button>
+                <button class="quick-action-btn" onclick="quickSearch('Star Wars')">
+                    <i class="fas fa-jedi"></i> Star Wars
+                </button>
+                <button class="quick-action-btn" onclick="quickSearch('Harry Potter')">
+                    <i class="fas fa-hat-wizard"></i> Harry Potter
+                </button>
+                <button class="quick-action-btn" onclick="quickSearch('Batman')">
+                    <i class="fas fa-bat"></i> Batman
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- TRENDING SECTION -->
+    <section class="trending-section" id="trendingSection">
+        <div class="container">
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title">
+                        <i class="fas fa-fire-flame-curved"></i>
+                        Trending Now
+                    </h2>
+                    <p class="section-subtitle">What's popular this week</p>
+                </div>
+                <a href="#" class="view-all-btn" onclick="showTrendingPage()">
+                    View All <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="trending-scroll" id="trendingScroll">
+            <!-- Trending cards will be loaded here -->
+        </div>
+    </section>
+
+    <!-- GENRE SECTION -->
+    <section class="genre-section" id="genreSection">
+        <div class="container">
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title">
+                        <i class="fas fa-tags"></i>
+                        Browse by Genre
+                    </h2>
+                    <p class="section-subtitle">Find movies you'll love</p>
+                </div>
+            </div>
+
+            <div class="genre-pills" id="genrePills">
+                <!-- Genre pills will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN MOVIES SECTION -->
+    <main class="movies-section">
+        <div class="container">
+            <!-- Section Header with Mini Search -->
+            <div class="section-header" id="moviesHeader" style="display: none;">
+                <div>
+                    <h2 class="section-title" id="moviesSectionTitle">
+                        <i class="fas fa-film"></i>
+                        Search Results
+                    </h2>
+                    <p class="section-subtitle" id="moviesSectionSubtitle">Showing results for your search</p>
+                </div>
+                <!-- Mini Search Bar for results page -->
+                <div class="mini-search" id="miniSearch">
+                    <input type="text" class="mini-search-input" id="miniSearchInput" placeholder="Search..."
+                        autocomplete="off">
+                    <button class="mini-search-btn" onclick="miniSearchMovies()" aria-label="Search">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters-section" id="filtersSection" style="display: none;">
+                <div class="filter-group">
+                    <label class="filter-label">Sort by:</label>
+                    <select class="filter-select" id="sortFilter">
+                        <option value="popularity.desc">Popularity</option>
+                        <option value="vote_average.desc">Highest Rated</option>
+                        <option value="release_date.desc">Newest First</option>
+                        <option value="release_date.asc">Oldest First</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Year:</label>
+                    <select class="filter-select" id="yearFilter">
+                        <option value="">All Years</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Rating:</label>
+                    <select class="filter-select" id="ratingFilter">
+                        <option value="">All Ratings</option>
+                        <option value="9">9+ Stars</option>
+                        <option value="8">8+ Stars</option>
+                        <option value="7">7+ Stars</option>
+                        <option value="6">6+ Stars</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary filter-apply-btn" onclick="applyFilters()">
+                    <i class="fas fa-filter"></i> Apply
+                </button>
+                <div class="results-count" id="resultsCount"></div>
+            </div>
+
+            <!-- Movie Grid -->
+            <div class="movie-grid" id="movieGrid">
+                <!-- Default empty state -->
+                <div class="empty-state" id="defaultState" style="grid-column: 1 / -1;">
+                    <div class="empty-state-icon">
+                        <i class="fas fa-film"></i>
+                    </div>
+                    <h3 class="empty-state-title">Ready to Explore?</h3>
+                    <p class="empty-state-message">
+                        Search for movies above or browse trending films to get started on your cinematic journey.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination" id="pagination" style="display: none;">
+                <button class="pagination-btn" id="prevBtn" onclick="changePage(-1)">
+                    <i class="fas fa-chevron-left"></i>
+                    Previous
+                </button>
+                <div class="pagination-info" id="paginationInfo">Page 1</div>
+                <button class="pagination-btn" id="nextBtn" onclick="changePage(1)">
+                    Next
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- MOVIE DETAIL MODAL -->
+    <div class="modal-backdrop" id="modalBackdrop" onclick="closeModal()"></div>
+    <div class="modal" id="movieModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <button class="modal-close" onclick="closeModal()" aria-label="Close modal">
+            <i class="fas fa-times"></i>
+        </button>
+
+        <div class="modal-content">
+            <!-- Modal Hero -->
+            <div class="modal-hero">
+                <img src="" alt="Movie backdrop" class="modal-backdrop-img" id="modalBackdropImg">
+                <div class="modal-hero-overlay"></div>
+                <div class="modal-hero-content">
+                    <img src="" alt="Movie poster" class="modal-poster" id="modalPoster">
+                    <div class="modal-hero-info">
+                        <h2 class="modal-title" id="modalTitle">Movie Title</h2>
+                        <div class="modal-meta">
+                            <span class="rating" id="modalRating">
+                                <i class="fas fa-star"></i> 8.5
+                            </span>
+                            <span class="divider"></span>
+                            <span id="modalYear">2024</span>
+                            <span class="divider"></span>
+                            <span id="modalRuntime">2h 15m</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <!-- Actions -->
+                <div class="modal-actions">
+                    <button class="btn btn-primary" id="watchlistBtn" onclick="toggleWatchlist()">
+                        <i class="fas fa-plus"></i>
+                        <span>Add to Watchlist</span>
+                    </button>
+                    <button class="trailer-btn" id="trailerBtn" onclick="playTrailer()">
+                        <i class="fab fa-youtube"></i>
+                        <span>Watch Trailer</span>
+                    </button>
+                </div>
+
+                <!-- Genres -->
+                <div class="modal-section">
+                    <h3 class="modal-section-title">Genres</h3>
+                    <div class="modal-genres" id="modalGenres"></div>
+                </div>
+
+                <!-- Plot -->
+                <div class="modal-section">
+                    <h3 class="modal-section-title">Overview</h3>
+                    <p class="modal-plot" id="modalPlot">
+                        Movie description will appear here...
+                    </p>
+                </div>
+
+                <!-- Cast -->
+                <div class="modal-section">
+                    <h3 class="modal-section-title">Top Cast</h3>
+                    <div class="modal-cast" id="modalCast"></div>
+                </div>
+
+                <!-- Additional Info -->
+                <div class="modal-section">
+                    <h3 class="modal-section-title">Details</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+                        <div>
+                            <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 4px;">Director</p>
+                            <p style="font-weight: 600;" id="modalDirector">N/A</p>
+                        </div>
+                        <div>
+                            <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 4px;">Release Date</p>
+                            <p style="font-weight: 600;" id="modalReleaseDate">N/A</p>
+                        </div>
+                        <div>
+                            <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 4px;">Budget</p>
+                            <p style="font-weight: 600;" id="modalBudget">N/A</p>
+                        </div>
+                        <div>
+                            <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 4px;">Revenue</p>
+                            <p style="font-weight: 600;" id="modalRevenue">N/A</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Review -->
+                <div class="modal-section">
+                    <h3 class="modal-section-title">Your Review</h3>
+                    <div class="review-section">
+                        <div class="star-rating" id="starRating">
+                            <i class="far fa-star" data-rating="1"></i>
+                            <i class="far fa-star" data-rating="2"></i>
+                            <i class="far fa-star" data-rating="3"></i>
+                            <i class="far fa-star" data-rating="4"></i>
+                            <i class="far fa-star" data-rating="5"></i>
+                        </div>
+                        <textarea class="review-textarea" id="userReview"
+                            placeholder="Share your thoughts about this movie..." rows="3"></textarea>
+                        <button class="btn btn-secondary" onclick="saveReview()" style="margin-top: 1rem;">
+                            <i class="fas fa-save"></i>
+                            Save Review
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Similar Movies -->
+                <div class="modal-section">
+                    <h3 class="modal-section-title">Similar Movies</h3>
+                    <div class="similar-movies" id="similarMovies"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIDEO MODAL (Trailer) -->
+    <div class="video-modal" id="videoModal" onclick="closeVideoModal()">
+        <button class="video-modal-close" onclick="closeVideoModal()" aria-label="Close video">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="video-modal-content" onclick="event.stopPropagation()">
+            <iframe id="trailerIframe" src="" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-brand">
+                        <i class="fas fa-film"></i>
+                        MovieConnect
+                    </div>
+                    <p class="footer-description">
+                        Your personal movie companion. Discover new films, track your favorites, and never miss a great
+                        movie again.
+                    </p>
+                    <div class="footer-social" style="margin-top: 1rem;">
+                        <a href="#" class="social-link" aria-label="GitHub">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="footer-title">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" onclick="goHome()">Home</a></li>
+                        <li><a href="#" onclick="showTrendingPage()">Trending</a></li>
+                        <li><a href="#" onclick="showWatchlist()">My Watchlist</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="footer-title">Genres</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" onclick="searchByGenre(28)">Action</a></li>
+                        <li><a href="#" onclick="searchByGenre(35)">Comedy</a></li>
+                        <li><a href="#" onclick="searchByGenre(18)">Drama</a></li>
+                        <li><a href="#" onclick="searchByGenre(27)">Horror</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="footer-title">More Genres</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" onclick="searchByGenre(878)">Sci-Fi</a></li>
+                        <li><a href="#" onclick="searchByGenre(10749)">Romance</a></li>
+                        <li><a href="#" onclick="searchByGenre(16)">Animation</a></li>
+                        <li><a href="#" onclick="searchByGenre(53)">Thriller</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p class="footer-copyright">
+                    © 2025 Developed by <a href="#">Ratty Ram</a> • L&T College Project
+                </p>
+                <div class="footer-tmdb">
+                    <span>Data provided by</span>
+                    <img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg"
+                        alt="TMDb Logo">
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+
+</html>
